@@ -1,8 +1,8 @@
-//COMMANDS:
+/*COMMANDS:*/
 
-//STUDENT:
+/*STUDENT:*/
 
-CREATE TABLE “STUDENT” (
+CREATE TABLE â€œSTUDENTâ€ (
     student_university_id numeric(10) primary key,
     first_name varchar(100) not null,          
     last_name	varchar(100) not null,  
@@ -27,9 +27,9 @@ CREATE TABLE “STUDENT” (
 
 
 
-//COURSE:
+/*COURSE:*/
 
-CREATE TABLE “COURSE” (
+CREATE TABLE â€œCOURSEâ€ (
     course_code varchar(10) primary key,
     course_name varchar(100) not null,          
     credit_hours	numeric(2)  DEFAULT 0 CHECK(course_fee>=0),
@@ -39,9 +39,9 @@ CREATE TABLE “COURSE” (
     required_for_major_transition_yn boolean not null,
 );
 
-//0PROGRAM:
+/*PROGRAM:*/
 
-CREATE TABLE “PROGRAM” (
+CREATE TABLE â€œPROGRAMâ€ (
 program_type varchar(50),
     concentration varchar(100),          
     description	varchar(200),
@@ -51,12 +51,12 @@ program_type varchar(50),
    constraint credits_check CHECK(total_credits_needed>= total_core_credits_needed)
 );
 
-Create domain GRADE varchar(15) NOT NULL CHECK(VALUE IN (‘A’,’B’,’C’,’D’,’F’,’W’));
+Create domain GRADE varchar(15) NOT NULL CHECK(VALUE IN (â€˜Aâ€™,â€™Bâ€™,â€™Câ€™,â€™Dâ€™,â€™Fâ€™,â€™Wâ€™));
 
 
 
 
-CREATE TABLE “PRE_REQUISITE” (
+CREATE TABLE â€œPRE_REQUISITEâ€ (
 course_code varchar(10),
     pre_requisite_course_code varchar(10) references COURSE(course_code),          
     minimum_grade_required	grade,
@@ -64,7 +64,7 @@ primary key(course_code, pre_requisite_course_code)
 
 );
 
-CREATE TABLE “PROGRAM_REQUIREMENT” (
+CREATE TABLE â€œPROGRAM_REQUIREMENTâ€ (
 program_type varchar(50) ,
 concentration varchar(100),          
 course_code varchar(10),
@@ -75,17 +75,17 @@ foreign key(program_type , concentration) references PROGRAM(program_type , conc
 );
 
 
-Create domain SEMESTER varchar(15) NOT NULL CHECK(VALUE IN (‘fall’,’spring’,’’summer”));
+Create domain SEMESTER varchar(15) NOT NULL CHECK(VALUE IN (â€˜fallâ€™,â€™springâ€™,â€™â€™summerâ€));
 
-Create domain COURSE_STATUS varchar(20) NOT NULL CHECK(VALUE IN (‘registered’,’completed’,’withdrawn’,’failed’));
-
-
+Create domain COURSE_STATUS varchar(20) NOT NULL CHECK(VALUE IN (â€˜registeredâ€™,â€™completedâ€™,â€™withdrawnâ€™,â€™failedâ€™));
 
 
 
 
 
-CREATE TABLE “ENROLLED_ON” (
+
+
+CREATE TABLE â€œENROLLED_ONâ€ (
 student_university_id numeric(10) references STUDENT(student_university_id),
 course_code varchar(10) references COURSE(course_code),
 semester  semester,
@@ -98,22 +98,22 @@ primary key(student_university_id, course_code, semester  , year),
 constraint course_enrolled_dates CHECK(start_date<end_date)
 );
 
-Create domain SURVEY varchar(20) NOT NULL CHECK(VALUE IN (‘pre-major’,’major’,’exit’));
+Create domain SURVEY varchar(20) NOT NULL CHECK(VALUE IN (â€˜pre-majorâ€™,â€™majorâ€™,â€™exitâ€™));
 
-CREATE TABLE “SURVEY” (
+CREATE TABLE â€œSURVEYâ€ (
 survey_type  survey,
 question varchar(400),
 primary key(survey_type, question)
 );
 
-Create table “STUDENT_PEER_MENTOR” (
+Create table â€œSTUDENT_PEER_MENTORâ€ (
 student_university_id  numeric(10) references STUDENT(student_university_id),
 mentor_id numeric(10) references STUDENT(student_university_id),
 semester semester,
 year    numeric(4) CHECK(year>0)
 primary key(student_university_id, semester, year)
 );
-Create table “GIVES” (
+Create table â€œGIVESâ€ (
 student_university_id  numeric(10) references STUDENT(student_university_id),
 survey_type  survey_type,
 question varchar(400),
@@ -124,13 +124,13 @@ foreign key(survey_type, question) references SURVEY(survey_type, question),
 primary key(student_university_id, survey_type, question, survey_date)
 );
 
-Create table “INCIDENT” (
+Create table â€œINCIDENTâ€ (
 incident_category varchar(20),
 description        varchar(200),
 primary key(incident_category)
 ); 
 
-Create table “FOLLOW_UP” (
+Create table â€œFOLLOW_UPâ€ (
 student_university_id  numeric(10) references STUDENT(student_university_id),
 incident_category varchar(20) references INCIDENT(incident_category),
 incident_date date CHECK(incident_date<=current_date),
@@ -142,7 +142,7 @@ primary key(student_university_id, incident_category, incident_category, inciden
 
 
 
-Create table “OPTS_FOR” (
+Create table â€œOPTS_FORâ€ (
 student_university_id  numeric(10) references STUDENT(student_university_id),
 program_type varchar(50) ,
 concentration varchar(100),   
@@ -172,16 +172,16 @@ constraint program_dates_check CHECK(start_date<end_date)
 
 
 
-//INSERT COMMANDS:
+/*INSERT COMMANDS:*/
 
-//STUDENT: 
+/*STUDENT: */
 INSERT INTO STUDENT(student_university_id, first_name,  last_name,  date_of_birth,    international_yn,  pre_majors_yn, majors_yn, under_represented_group_name	, email,phone,street,	  apartment, city,  state,zip,  resume_location)
 VALUES(
-(101960001,’Virat’,’Kohli’,02-10-1985,True,True,False,’Asian’,’vk@cs.edu’, 1505666901, “Gandhi Ave”, ‘Apt 1’, ‘Raja Apts’, ‘ABQ’,’NM’,87101,’www.cs.edu/resume/101960001.pdf’),
-(101960002,’MS’,Dhoni,12-02-1981,False,True,False,’Asian’,’ms@cs.edu’, 1505621702, ‘Nehru Ave’, ‘Apt 2’, ‘Rani Apts’, ‘ABQ’,’NM’,87106,’www.cs.edu/resume/101960002.pdf’),
-(101960003,’Jhon’,’Cena’,03-06-1990,False,True,True,’’,’jc@cs.edu’, 1415621602, ‘Lead Ave’, ‘Apt 9’, ‘RJ Apts’, ‘ABQ’,’NM’,87110,’www.cs.edu/resume/101960003.pdf’),
-(101960004,’Randy’,’Ortan’ ,01-01-1991,True,True,True,’’,’ro@cs.edu’, 1765621602, ‘Copper Ave’, ‘Apt 9’, ‘Kings Apts’, ‘ABQ’,’NM’,87109,’www.cs.edu/resume/101960004.pdf’),
-(101960005,’Aakarsh’,’Nadella’ ,01-03-1995,True,False,True,’Hispanic’,’an@cs.edu’, 1765621505, ‘Gold Ave’, ‘Apt 9’, ‘Queens Apts’, ‘ABQ’,’NM’,87100,’www.cs.edu/resume/101960005.pdf’)
+(101960001,â€™Viratâ€™,â€™Kohliâ€™,02-10-1985,True,True,False,â€™Asianâ€™,â€™vk@cs.eduâ€™, 1505666901, â€œGandhi Aveâ€, â€˜Apt 1â€™, â€˜Raja Aptsâ€™, â€˜ABQâ€™,â€™NMâ€™,87101,â€™www.cs.edu/resume/101960001.pdfâ€™),
+(101960002,â€™MSâ€™,Dhoni,12-02-1981,False,True,False,â€™Asianâ€™,â€™ms@cs.eduâ€™, 1505621702, â€˜Nehru Aveâ€™, â€˜Apt 2â€™, â€˜Rani Aptsâ€™, â€˜ABQâ€™,â€™NMâ€™,87106,â€™www.cs.edu/resume/101960002.pdfâ€™),
+(101960003,â€™Jhonâ€™,â€™Cenaâ€™,03-06-1990,False,True,True,â€™â€™,â€™jc@cs.eduâ€™, 1415621602, â€˜Lead Aveâ€™, â€˜Apt 9â€™, â€˜RJ Aptsâ€™, â€˜ABQâ€™,â€™NMâ€™,87110,â€™www.cs.edu/resume/101960003.pdfâ€™),
+(101960004,â€™Randyâ€™,â€™Ortanâ€™ ,01-01-1991,True,True,True,â€™â€™,â€™ro@cs.eduâ€™, 1765621602, â€˜Copper Aveâ€™, â€˜Apt 9â€™, â€˜Kings Aptsâ€™, â€˜ABQâ€™,â€™NMâ€™,87109,â€™www.cs.edu/resume/101960004.pdfâ€™),
+(101960005,â€™Aakarshâ€™,â€™Nadellaâ€™ ,01-03-1995,True,False,True,â€™Hispanicâ€™,â€™an@cs.eduâ€™, 1765621505, â€˜Gold Aveâ€™, â€˜Apt 9â€™, â€˜Queens Aptsâ€™, â€˜ABQâ€™,â€™NMâ€™,87100,â€™www.cs.edu/resume/101960005.pdfâ€™)
 );
 
 
@@ -196,65 +196,65 @@ VALUES(
 
 
 
-//DATA INSERTION:
-//To insert the data, we create the data for each of the tables in a comma separated value(CSV) file and import them into postgres using the below commands.
+/*DATA INSERTION:*/
+/*To insert the data, we create the data for each of the tables in a comma separated value(CSV) file and import them into postgres using the below commands.*/
 COPY  STUDENT(student_university_id, first_name,  last_name,  date_of_birth,    international_yn,  pre_majors_yn, majors_yn, under_represented_group_name	, email,phone,street,	  apartment, city,  state,zip,  resume_location)
-FROM ‘./STUDENT.csv’  DELIMITER ‘,’ CSV HEADER
+FROM â€˜./STUDENT.csvâ€™  DELIMITER â€˜,â€™ CSV HEADER
 \copy  STUDENT(student_university_id, first_name,  last_name,  date_of_birth,    international_yn,  pre_majors_yn, majors_yn, under_represented_group_name , email,phone,street,   apartment, city,  state,zip,  resume_location)
 FROM '/STUDENT.csv'  DELIMITER ',' CSV HEADER
 
 \copy  COURSE(course_code,course_name,department,course_fee,online_yn,required_for_major_transition_yn)
-FROM './COURSE.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './COURSE.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 
 \copy  PROGRAM(program_type,concentration,description, total_credits_needed, total_core_credits_needed )
-FROM './PROGRAM.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './PROGRAM.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 
 \copy  PRE_REQUISITE(course_code,pre_requisite_course_code, minimum_grade_required)
-FROM './PRE-REQUISITE.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './PRE-REQUISITE.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 
 \copy  PROGRAM_REQUIREMENT(program_type, concentration, course_code, minimum_grade_required)
-FROM './PROGRAM_REQUIREMENT.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './PROGRAM_REQUIREMENT.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 \copy  ENROLLED_ON(student_university_id, course_code, semester, year, start_date, end_date, course_status, grade)
-FROM './ENROLLED_ON.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './ENROLLED_ON.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 
 \copy  SURVEY(survey_type,question)
-FROM './SURVEY_ON.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './SURVEY_ON.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 
 \copy  STUDENT_PEER_MENTOR(student_university_id, mentor_id, semester, year)
-FROM './ STUDENT_PEER_MENTOR.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './ STUDENT_PEER_MENTOR.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 \copy  GIVES(student_university_id, survey_type, question, survey_date,rating,comment)
-FROM './GIVES.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './GIVES.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 
 \copy  INCIDENT(incident_category, description)
-FROM './INCIDENT.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './INCIDENT.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 
 \copy  FOLLOW_UP(student_university_id, incident_category, incident_date,incident_time, necessary_action )
-FROM './FOLLOW_UP.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './FOLLOW_UP.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 \copy  OPTS_FOR(student_university_id, program_type, concentration, opted_semester
 ,year,start_date,end_date, overall_grade,status )
-FROM './OPTS_FOR.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './OPTS_FOR.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 
 \copy  ACTIVITY(activity_name, activity_type, organized_by, organizer_mail, organizer_phone)
-FROM './ ACTIVITY.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './ ACTIVITY.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 
 \copy  EMPLOYEE(employee_id, ssn, first_name, middle_name, last_name, email, work_experience, salary)
-FROM './ EMPLOYEE.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './ EMPLOYEE.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 
 copy  FACULTY (employee_id, specialization, research_interest )
-FROM './ FACULTY.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’
+FROM './ FACULTY.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™
 
 \copy  ADVISEMENT (student_university_id,employee_id, advisement_type, year, semester)
-FROM './ADVISEMENT.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251
+FROM './ADVISEMENT.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251
 \copy  TUTORING (course_code,employee_id)
-FROM './TUTORING.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251
+FROM './TUTORING.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251
 \copy  TAUGHT_BY (course_code,employee_id,semester, year, lecture_hall_name, lecture_room_number, start_time, end_time)
-FROM './ TAUGHT_BY.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’;
+FROM './ TAUGHT_BY.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™;
 
 \copy  TUTOR_STUDENT (student_university_id,employee_id)
-FROM './TUTOR_STUDENT.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’;
+FROM './TUTOR_STUDENT.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™;
 
 \copy  STUDENT_PARTICIPATION (student_university_id, activity_name, activity_type, activity_date  , start_time, venue, duration)
-FROM './STUDENT_PARTICIPATION.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1251’;
+FROM './STUDENT_PARTICIPATION.csv'  DELIMITER ',' CSV HEADER encoding â€˜windows-1251â€™;
 
 
 
@@ -270,26 +270,26 @@ FROM './STUDENT_PARTICIPATION.csv'  DELIMITER ',' CSV HEADER encoding ‘windows-1
 
 
 
-//QUERIES:
-//Query 1: : Given a student, show all the necessary information to describe how far along is that student in their program of study
-SELECT STUDENT.student_university_id AS “StudentID”
-	,first_name AS “FirstName”
-	,last_name AS “LastName”
-	,program_type AS “ProgramType”
-	,concentration AS “Concentration”
-	,OPTS_FOR.start_date AS “ProgramStartDate”
-	,sum(COURSE.credit_hours) AS “CreditHoursApproved”
+/*QUERIES:*/
+/*Query 1: : Given a student, show all the necessary information to describe how far along is that student in their program of study*/
+SELECT STUDENT.student_university_id AS â€œStudentIDâ€
+	,first_name AS â€œFirstNameâ€
+	,last_name AS â€œLastNameâ€
+	,program_type AS â€œProgramTypeâ€
+	,concentration AS â€œConcentrationâ€
+	,OPTS_FOR.start_date AS â€œProgramStartDateâ€
+	,sum(COURSE.credit_hours) AS â€œCreditHoursApprovedâ€
 	,count(DISTINCT (
 			ENROLLED_ON.semester
 			,ENROLLED_ON.year
-			)) AS “SemestersRegistered”
-	,overall_grade AS “OverallGrade”
-	,OPTS_FOR.STATUS AS “ProgramStatus”
+			)) AS â€œSemestersRegisteredâ€
+	,overall_grade AS â€œOverallGradeâ€
+	,OPTS_FOR.STATUS AS â€œProgramStatusâ€
 FROM STUDENT
 INNER JOIN OPTS_FOR ON STUDENT.student_university_id = OPTS_FOR.student_university_id
 INNER JOIN ENROLLED_ON ON STUDENT.student_university_id = ENROLLED_ON.student_university_id
 INNER JOIN COURSE ON COURSE.course_code = ENROLLED_ON.course_code
-WHERE course_status = ”completed”
+WHERE course_status = â€completedâ€
 	AND STUDENT.student_university_id = 101960001
 GROUP BY STUDENT.student_university_id
 	,program_type
@@ -304,8 +304,8 @@ GROUP BY STUDENT.student_university_id
 
 
 
-//Query 2: 
-//1.	Total number of students who are premajors.
+/*Query 2: */
+/*1.	Total number of students who are premajors.*/
 SELECT count(*)
 FROM STUDENT
 WHERE pre_majors_yn = True
@@ -313,14 +313,14 @@ WHERE pre_majors_yn = True
 
  
 
-//2.	Total number of students who are majors (or enrolled in the MSc or the PhD program)
+/*2.	Total number of students who are majors (or enrolled in the MSc or the PhD program)*/
 SELECT count(*)
 FROM STUDENT
 WHERE majors_yn = True
 
  
 
-//3.	Total number of students who entered the program this year.
+/*3.	Total number of students who entered the program this year.*/
 SELECT count(*)
 FROM OPTS_FOR
 WHERE extract(year FROM start_date) = 2019
@@ -330,15 +330,15 @@ WHERE extract(year FROM start_date) = 2019
 
 
 
-//4.	Total number of students who are active, i.e. enrolled in course for the current semester
+/*4.	Total number of students who are active, i.e. enrolled in course for the current semester*/
 SELECT count(DISTINCT student_univesity_id)
 FROM ENROLLED_ON
 WHERE year = 2019
-	AND semester = ‘spring’
+	AND semester = â€˜springâ€™
 
  
 
-//5.	Total number of students in the program of study
+/*5.	Total number of students in the program of study*/
 SELECT program_type AS ProgramType
 	,concentration AS Concentration
 	,count(*) AS NumberOfStudents
@@ -348,7 +348,7 @@ GROUP BY program_type
 
  
 
-//6.	How many students graduated this year
+/*6.	How many students graduated this year*/
 SELECT count(*)
 FROM OPTS_FOR
 WHERE extract(year FROM end_date) = 2019
@@ -358,7 +358,7 @@ WHERE extract(year FROM end_date) = 2019
 
 
 
-//7.	How many students in each category belong to under-represented groups
+/*7.	How many students in each category belong to under-represented groups*/
 SELECT under_represented_group_name
 	,count(*) AS NumberOfStudents
 FROM STUDENT
@@ -366,7 +366,7 @@ GROUP BY under_represented_group_name;
 
  
 
-//Query 3: List of students who participated in a specific activity of recruitment/retention. Provide the total number of students by gender.
+/*Query 3: List of students who participated in a specific activity of recruitment/retention. Provide the total number of students by gender.*/
 SELECT R1.student_university_id AS "StudentID"
 	,first_name AS "FirstName"
 	,last_name AS "LastName"
@@ -393,7 +393,7 @@ GROUP BY activity_name
  
 
 
-//Query 4: List the names of the tutors, the student mentors, and the faculty mentors, provide the total of persons in each category. For tutors, list the courses they are able to tutor for. For mentors, indicate how many students they are mentoring and the list of students mentors.
+/*Query 4: List the names of the tutors, the student mentors, and the faculty mentors, provide the total of persons in each category. For tutors, list the courses they are able to tutor for. For mentors, indicate how many students they are mentoring and the list of students mentors.*/
 SELECT CONCAT (
 		first_name
 		,last_name
@@ -429,8 +429,8 @@ ORDER BY "Type";
 SELECT CONCAT (
 		first_name
 		,last_name
-		) AS “TutorName”
-	,course_name AS “TutorCourse”
+		) AS â€œTutorNameâ€
+	,course_name AS â€œTutorCourseâ€
 FROM Tutoring
 INNER JOIN EMPLOYEE ON TUTORING.employee_id = EMPLOYEE.employee_id
 INNER JOIN COURSE ON Tutoring.course_code = COURSE.course_code
@@ -453,20 +453,20 @@ GROUP BY first_name
 SELECT CONCAT (
 		first_name
 		,last_name
-		) AS “Student Mentor”
+		) AS â€œStudent Mentorâ€
 FROM STUDENT_PEER_MENTOR NATURAL
 INNER JOIN STUDENT
  
 
-//Query 5: 
+/*/Query 5: */
 Select * from GIVES where extract(year from survey_date)=2018
  
 
 
-//Query 6: 
-Select  course_name, grade, count(grade) from ENROLLED_ON INNER JOIN COURSE ON ENROLLED_ON.course_code = COURSE.course_code  where year = 2018 and semester=’spring’ group by course_name, grade order by course_name, grade
+/*Query 6: */
+Select  course_name, grade, count(grade) from ENROLLED_ON INNER JOIN COURSE ON ENROLLED_ON.course_code = COURSE.course_code  where year = 2018 and semester=â€™springâ€™ group by course_name, grade order by course_name, grade
  
-//Query 7 : 
+/*Query 7 : */
 Given a faculty member, list the names of the students they advise and any details about the advisement given.
 
 SELECT DISTINCT CONCAT (
@@ -478,7 +478,7 @@ INNER JOIN STUDENT ON ADVISEMENT.student_university_id = STUDENT.student_univers
 WHERE employee_id = 1012345868;
  
 
-//Query 8 : List the faculty members who do not advise nor mentor any student.
+/*Query 8 : List the faculty members who do not advise nor mentor any student.*/
 
 SELECT EMPLOYEE.*
 FROM FACULTY
@@ -489,19 +489,19 @@ WHERE EMPLOYEE.employee_id NOT IN (
 		);
  
 
-//Query 9: List the tutors with their names and courses they are able to tutor for
+/*Query 9: List the tutors with their names and courses they are able to tutor for*/
 SELECT CONCAT (
 		first_name
 		,last_name
-		) AS “TutorName”
-	,course_name AS “TutorCourse”
+		) AS â€œTutorNameâ€
+	,course_name AS â€œTutorCourseâ€
 FROM Tutoring
 INNER JOIN EMPLOYEE ON TUTORING.employee_id = EMPLOYEE.employee_id
 INNER JOIN COURSE ON Tutoring.course_code = COURSE.course_code
 
  
 
-//Query 10: : List the information about the tutors who belong to under-represented groups.
+/*Query 10: : List the information about the tutors who belong to under-represented groups.*/
 SELECT CONCAT (
 		first_name
 		,last_name
@@ -513,7 +513,7 @@ WHERE und er_represented_group_name <> NULL
 	OR under_represented_group_name <> '';
  
 
-//Query 11. 
+/*Query 11. */
 Select * from STUDENT where student_university_id  in (SELECT e1.student_university_id from ENROLLED_ON e1 INNER JOIN ENROLLED_ON e2 ON e1. student_university_id = e2. student_university_id where e1.semester = e2.semester and e1.year= e2.year and (e1.course_code,e2.course_code) in (select course_code,pre_requisite_course_code from PRE_REQUISITE))
 
  
@@ -538,7 +538,7 @@ Select * from STUDENT where student_university_id  in (SELECT e1.student_univers
 
 
 
-CREATE TABLE “COURSE” (
+CREATE TABLE â€œCOURSEâ€ (
 	course_code VARCHAR(10) PRIMARY KEY
 	,course_name VARCHAR(100) NOT NULL
 	,credit_hours NUMERIC(2) DEFAULT 0 CHECK (course_fee >= 0)
@@ -549,7 +549,7 @@ CREATE TABLE “COURSE” (
 	,
 	);
 
-CREATE TABLE “PROGRAM” (
+CREATE TABLE â€œPROGRAMâ€ (
 	program_type VARCHAR(50)
 	,concentration VARCHAR(100)
 	,description VARCHAR(200)
@@ -564,16 +564,16 @@ CREATE TABLE “PROGRAM” (
 
 CREATE domain GRADE VARCHAR(15) NOT NULL CHECK (
 	VALUE IN (
-		‘A’
-		,’B’
-		,’C’
-		,’D’
-		,’F’
-		,’W’
+		â€˜Aâ€™
+		,â€™Bâ€™
+		,â€™Câ€™
+		,â€™Dâ€™
+		,â€™Fâ€™
+		,â€™Wâ€™
 		)
 	);
 
-CREATE TABLE “PRE_REQUISITE” (
+CREATE TABLE â€œPRE_REQUISITEâ€ (
 	course_code VARCHAR(10)
 	,pre_requisite_course_code VARCHAR(10) REFERENCES COURSE(course_code)
 	,minimum_grade_required grade
@@ -583,7 +583,7 @@ CREATE TABLE “PRE_REQUISITE” (
 		)
 	);
 
-CREATE TABLE “PROGRAM_REQUIREMENT” (
+CREATE TABLE â€œPROGRAM_REQUIREMENTâ€ (
 	program_type VARCHAR(50)
 	,concentration VARCHAR(100)
 	,course_code VARCHAR(10)
@@ -601,22 +601,22 @@ CREATE TABLE “PROGRAM_REQUIREMENT” (
 
 CREATE domain SEMESTER VARCHAR(15) NOT NULL CHECK (
 	VALUE IN (
-		‘fall’
-		,’spring’
-		,’’summer”
+		â€˜fallâ€™
+		,â€™springâ€™
+		,â€™â€™summerâ€
 		)
 	);
 
 CREATE domain COURSE_STATUS VARCHAR(20) NOT NULL CHECK (
 	VALUE IN (
-		‘registered’
-		,’completed’
-		,’withdrawn’
-		,’failed’
+		â€˜registeredâ€™
+		,â€™completedâ€™
+		,â€™withdrawnâ€™
+		,â€™failedâ€™
 		)
 	);
 
-CREATE TABLE “ENROLLED_ON” (
+CREATE TABLE â€œENROLLED_ONâ€ (
 	student_university_id NUMERIC(10) REFERENCES STUDENT(student_university_id)
 	,course_code VARCHAR(10) REFERENCES COURSE(course_code)
 	,semester semester
@@ -636,13 +636,13 @@ CREATE TABLE “ENROLLED_ON” (
 
 CREATE domain SURVEY VARCHAR(20) NOT NULL CHECK (
 	VALUE IN (
-		‘pre - major’
-		,’major’
-		,’exit’
+		â€˜pre - majorâ€™
+		,â€™majorâ€™
+		,â€™exitâ€™
 		)
 	);
 
-CREATE TABLE “SURVEY” (
+CREATE TABLE â€œSURVEYâ€ (
 	survey_type survey
 	,question VARCHAR(400)
 	,PRIMARY KEY (
@@ -651,7 +651,7 @@ CREATE TABLE “SURVEY” (
 		)
 	);
 
-CREATE TABLE “STUDENT_PEER_MENTOR” (
+CREATE TABLE â€œSTUDENT_PEER_MENTORâ€ (
 	student_university_id NUMERIC(10) REFERENCES STUDENT(student_university_id)
 	,mentor_id NUMERIC(10) REFERENCES STUDENT(student_university_id)
 	,semester semester
@@ -662,7 +662,7 @@ CREATE TABLE “STUDENT_PEER_MENTOR” (
 		)
 	);
 
-CREATE TABLE “GIVES” (
+CREATE TABLE â€œGIVESâ€ (
 	student_university_id NUMERIC(10) REFERENCES STUDENT(student_university_id)
 	,survey_type survey_type
 	,question VARCHAR(400)
@@ -681,13 +681,13 @@ CREATE TABLE “GIVES” (
 		)
 	);
 
-CREATE TABLE “INCIDENT” (
+CREATE TABLE â€œINCIDENTâ€ (
 	incident_category VARCHAR(20)
 	,description VARCHAR(200)
 	,PRIMARY KEY (incident_category)
 	);
 
-CREATE TABLE “FOLLOW_UP” (
+CREATE TABLE â€œFOLLOW_UPâ€ (
 	student_university_id NUMERIC(10) REFERENCES STUDENT(student_university_id)
 	,incident_category VARCHAR(20) REFERENCES INCIDENT(incident_category)
 	,incident_date DATE CHECK (incident_date <= CURRENT_DATE)
@@ -701,7 +701,7 @@ CREATE TABLE “FOLLOW_UP” (
 		)
 	);
 
-CREATE TABLE “OPTS_FOR” (
+CREATE TABLE â€œOPTS_FORâ€ (
 	student_university_id NUMERIC(10) REFERENCES STUDENT(student_university_id)
 	,program_type VARCHAR(50)
 	,concentration VARCHAR(100)
